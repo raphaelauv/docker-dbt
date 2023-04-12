@@ -1,0 +1,11 @@
+default:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: service-account
+      project: ${PROJECT:=default}
+      dataset: ${DATASET:=dev}
+      threads: ${THREADS:=1}
+      keyfile: ${GOOGLE_APPLICATION_CREDENTIALS:=default}
+      location: EU

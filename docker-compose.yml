@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  dbt:
+    image: dbt:dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+# uncomment this line to use your github_token in local
+#    env_file:
+#      - .env
+    environment:
+#      GOOGLE_APPLICATION_CREDENTIALS: "/credentials.json"
+      GIT_TOKEN: $GITHUB_TOKEN
+      GIT_REPO: "user_name/MY_REPO.git"
+      PROJECT: my-gcp-project-name
+    volumes:
+      #      - ~/my_gcp_creds.json:/credentials.json
+      # Source code
+      - ./src/profiles.yml:/opt/program/profiles.yml
+      - ./entrypoint.sh:/entrypoint.sh
+
+    command: [ "bash", "-c" ,"dbt run --profiles-dir . && echo finish" ]
