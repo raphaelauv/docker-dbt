@@ -1,1 +1,1 @@
-dbt-core==2.0.0rc10
+dbt-oss==2.0.11

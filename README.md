@@ -1,6 +1,6 @@
 # DBT docker image
 
-a [dbt-core](https://github.com/dbt-labs/dbt-core) 2.0 (release candidate) docker image targeting DuckDB, with an entrypoint that :  
+a [dbt](https://pypi.org/project/dbt-oss/) 2.0 (`dbt-oss`, Apache-2.0) docker image targeting DuckDB, with an entrypoint that :  
 
 1. clone the ${GIT_REPO} with the ${GIT_TOKEN} 
 
