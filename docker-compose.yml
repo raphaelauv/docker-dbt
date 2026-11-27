@@ -15,22 +15,10 @@ services:
       # Source code
       - ./src/profiles.yml:/opt/program/profiles.yml
       - ./entrypoint.sh:/entrypoint.sh
-      # DuckDB database file, shared with the duckdb service
+      # DuckDB database file
       - duckdb-data:/data
 
     command: [ "bash", "-c" ,"dbt run --profiles-dir . && echo finish" ]
-
-  # DuckDB CLI on the same database file, to inspect what dbt built.
-  # DuckDB allows a single writer: run it once dbt has finished.
-  #   docker compose run --rm duckdb
-  duckdb:
-    image: duckdb/duckdb:2.0.1
-    profiles: [ "tools" ]
-    command: [ "/duckdb", "/data/dbt.duckdb" ]
-    stdin_open: true
-    tty: true
-    volumes:
-      - duckdb-data:/data
 
 volumes:
   duckdb-data:

@@ -26,14 +26,6 @@ EOT
 
 dbt writes to the DuckDB file `/data/dbt.duckdb` (env `DUCKDB_PATH`), stored in the `duckdb-data` volume.
 
-### 1.3) Query the result with the DuckDB CLI
-
-DuckDB allows only one process to write a database file, so run it once dbt has finished:
-
-```shell
-~/REPO/raphaelauv/dbt-docker$ docker compose run --rm duckdb
-```
-
 Profile env vars: `DUCKDB_PATH` (default `/data/dbt.duckdb`), `SCHEMA` (default `main`), `THREADS` (default `1`).
 
 ## 2) Use with Airflow ( Kubernetes )
