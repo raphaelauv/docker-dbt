@@ -1,6 +1,6 @@
 # DBT docker image
 
-a dbt docker image with an entrypoint that :  
+a [dbt-core](https://github.com/dbt-labs/dbt-core) docker image using the [dbt-duckdb](https://github.com/duckdb/dbt-duckdb) adapter, with an entrypoint that :  
 
 1. clone the ${GIT_REPO} with the ${GIT_TOKEN} 
 
@@ -20,9 +20,21 @@ EOT
 
 ### 1.2) Build and run the container
 ```shell 
-~/REPO/raphaelauv/dbt-docker$ docker-compose build
-~/REPO/raphaelauv/dbt-docker$ docker-compose up
+~/REPO/raphaelauv/dbt-docker$ docker compose build
+~/REPO/raphaelauv/dbt-docker$ docker compose up dbt
 ```
+
+dbt writes to the DuckDB file `/data/dbt.duckdb` (env `DUCKDB_PATH`), stored in the `duckdb-data` volume.
+
+### 1.3) Query the result with the DuckDB CLI
+
+DuckDB allows only one process to write a database file, so run it once dbt has finished:
+
+```shell
+~/REPO/raphaelauv/dbt-docker$ docker compose run --rm duckdb
+```
+
+Profile env vars: `DUCKDB_PATH` (default `/data/dbt.duckdb`), `SCHEMA` (default `main`), `THREADS` (default `1`).
 
 ## 2) Use with Airflow ( Kubernetes )
 
@@ -45,12 +57,6 @@ dag = DAG("dbt_test",
           max_active_runs=1
           )
 
-secret_service_account = Secret(
-    deploy_type="volume",
-    deploy_target="/var/secrets/google",
-    secret="MY_SECRET",
-    key="service-account.json")
-
 secret_git_token = Secret(
     deploy_type='env',
     deploy_target='GIT_TOKEN',
@@ -64,11 +70,11 @@ with dag:
         namespace="default",
         arguments=["dbt", "run", "--profiles-dir", "."],
         env_vars={  # noqa
-            "GOOGLE_APPLICATION_CREDENTIALS": "/var/secrets/google/service-account.json",
             "GIT_REPO": "user_name/MY_REPO.git",
-            "PROJECT": "my-gcp-project-name"
+            # point to a persistent volume, or a MotherDuck db (md:my_db)
+            "DUCKDB_PATH": "/data/dbt.duckdb",
         },
-        secrets=[secret_service_account, secret_git_token],
+        secrets=[secret_git_token],
         is_delete_operator_pod=True,
         deferrable=True,
         image="dbt:0.1")

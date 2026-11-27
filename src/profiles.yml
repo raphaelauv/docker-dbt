@@ -2,10 +2,7 @@ default:
   target: dev
   outputs:
     dev:
-      type: bigquery
-      method: service-account
-      project: ${PROJECT:=default}
-      dataset: ${DATASET:=dev}
+      type: duckdb
+      path: ${DUCKDB_PATH:=/data/dbt.duckdb}
+      schema: ${SCHEMA:=main}
       threads: ${THREADS:=1}
-      keyfile: ${GOOGLE_APPLICATION_CREDENTIALS:=default}
-      location: EU
