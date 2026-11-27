@@ -1,4 +1,4 @@
-FROM python:3.10-slim
+FROM python:3.14-slim
 
 ENV PYTHONUNBUFFERED=TRUE
 ENV PYTHONDONTWRITEBYTECODE=TRUE
@@ -10,7 +10,7 @@ RUN apt-get update \
   && apt-get purge -y --auto-remove \
   && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /opt/program
+RUN mkdir -p /opt/program /data
 WORKDIR /opt/program
 
 COPY requirements.txt /opt/program/

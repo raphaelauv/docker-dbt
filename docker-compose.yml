@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   dbt:
     image: dbt:dev
@@ -10,14 +8,17 @@ services:
 #    env_file:
 #      - .env
     environment:
-#      GOOGLE_APPLICATION_CREDENTIALS: "/credentials.json"
       GIT_TOKEN: $GITHUB_TOKEN
       GIT_REPO: "user_name/MY_REPO.git"
-      PROJECT: my-gcp-project-name
+      DUCKDB_PATH: /data/dbt.duckdb
     volumes:
-      #      - ~/my_gcp_creds.json:/credentials.json
       # Source code
       - ./src/profiles.yml:/opt/program/profiles.yml
       - ./entrypoint.sh:/entrypoint.sh
+      # DuckDB database file
+      - duckdb-data:/data
 
     command: [ "bash", "-c" ,"dbt run --profiles-dir . && echo finish" ]
+
+volumes:
+  duckdb-data:
