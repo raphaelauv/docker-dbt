@@ -1,6 +1,6 @@
 # DBT docker image
 
-a [dbt-core](https://github.com/dbt-labs/dbt-core) docker image using the [dbt-duckdb](https://github.com/duckdb/dbt-duckdb) adapter, with an entrypoint that :  
+a [dbt-core](https://github.com/dbt-labs/dbt-core) 2.0 (release candidate) docker image targeting DuckDB, with an entrypoint that :  
 
 1. clone the ${GIT_REPO} with the ${GIT_TOKEN} 
 
@@ -71,7 +71,7 @@ with dag:
         arguments=["dbt", "run", "--profiles-dir", "."],
         env_vars={  # noqa
             "GIT_REPO": "user_name/MY_REPO.git",
-            # point to a persistent volume, or a MotherDuck db (md:my_db)
+            # point to a persistent volume
             "DUCKDB_PATH": "/data/dbt.duckdb",
         },
         secrets=[secret_git_token],
