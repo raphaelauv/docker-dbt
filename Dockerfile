@@ -2,8 +2,10 @@ FROM python:3.14-slim
 
 ENV PYTHONUNBUFFERED=TRUE
 ENV PYTHONDONTWRITEBYTECODE=TRUE
-ENV PIP_NO_CACHE_DIR=TRUE
-ENV PIP_DISABLE_PIP_VERSION_CHECK=TRUE
+ENV UV_NO_CACHE=1
+ENV UV_SYSTEM_PYTHON=1
+
+COPY --from=ghcr.io/astral-sh/uv:0.13.10 /uv /usr/local/bin/uv
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends git \
@@ -14,7 +16,7 @@ RUN mkdir -p /opt/program /data
 WORKDIR /opt/program
 
 COPY requirements.txt /opt/program/
-RUN python3 -m pip install -r /opt/program/requirements.txt
+RUN uv pip install -r /opt/program/requirements.txt
 
 COPY src/ /opt/program/
 
